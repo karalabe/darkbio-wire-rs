@@ -13,25 +13,28 @@ pub mod memory;
 pub mod protocol;
 pub mod transport;
 
-// The crates whose types appear in this crate's API, re-exported so consumers
-// can name them at the exact versions this crate was compiled against
+// Re-export the crates whose types appear in the API, so consumers can name
+// them at the exact versions this crate was compiled against
 pub use darkbio_clock as clock;
 pub use darkbio_cobs as cobs;
 pub use darkbio_crypto as crypto;
 pub use darkbio_trust as trust;
 pub use prost;
 
-/// Version of the wire crate compiled into this process. It's mostly a debug
-/// utility to help detect protocol version mismatches without having to guess
-/// who compiled what into where.
+/// Version of the wire crate compiled into this process.
+///
+/// It is mostly a debugging aid, so a protocol version mismatch can be found
+/// without guessing who compiled what into where.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 use std::fmt;
 use std::sync::atomic::{AtomicU64, Ordering};
 
-/// Labels a session or a message in log lines and nothing else. Sessions get
-/// a process-local number the peer never sees. The type derives no equality
-/// or hashing and exposes no number, so nothing can route or match on it.
+/// Label of a session or a message in log lines.
+///
+/// Sessions get a process-local number the peer never sees, and the default
+/// label is zero. The type derives no equality or hashing and exposes no
+/// number, so no code can route or match on it.
 #[derive(Clone, Copy, Debug, Default)]
 pub(crate) struct LogId(u64);
 
@@ -47,8 +50,8 @@ impl fmt::Display for LogId {
     }
 }
 
-/// Numbers the sessions of every client and server in the process, so log
-/// lines can be followed from a session's establishment to its end.
+/// Counter numbering the sessions of every client and server in the process,
+/// so log lines can follow a session from its establishment to its end.
 static SESSIONS: AtomicU64 = AtomicU64::new(0);
 
 /// Allocates the next session label, starting from one.
