@@ -42,12 +42,14 @@ pub(crate) struct LogId(
 );
 
 impl From<u64> for LogId {
+    /// Wraps a number as a log label.
     fn from(id: u64) -> Self {
         Self(id)
     }
 }
 
 impl fmt::Display for LogId {
+    /// Formats the label as its bare number.
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.0.fmt(f)
     }
