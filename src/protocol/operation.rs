@@ -21,7 +21,10 @@ use std::time::Instant;
 /// if the peer reuses a wire ID, so a late write result cannot complete
 /// another operation.
 #[derive(Clone)]
-pub(super) struct OperationKey(Arc<()>);
+pub(super) struct OperationKey(
+    /// Allocation whose address distinguishes this operation.
+    Arc<()>,
+);
 
 impl OperationKey {
     /// Creates a key distinct from every other key still in use.

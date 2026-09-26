@@ -510,7 +510,7 @@ impl Driver {
         assert!(self.sessions.insert(label, session).is_none());
     }
 
-    /// Permanently ends protocol owners before cancelling remaining physical I/O.
+    /// Permanently ends protocol owners before canceling remaining physical I/O.
     fn shutdown(&self) {
         if let Some(server) = &self.server {
             server.close();

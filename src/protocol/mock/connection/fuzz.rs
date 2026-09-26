@@ -57,8 +57,8 @@ pub enum Kind {
     RequestTimeout,
     /// Reply that times out in a blocked flush, yet still reaches the peer.
     ReplyTimeout,
-    /// Request and reply that expire while queued behind a blocked write,
-    /// releasing their IDs.
+    /// Request and reply that expire while queued behind a blocked write, the
+    /// request before taking a wire ID and the reply freeing its peer's.
     QueuedTimeout,
     /// Answer received during its request's flush, kept when that flush fails.
     ResponseBeforeFailure,

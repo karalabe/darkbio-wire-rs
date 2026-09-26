@@ -205,6 +205,12 @@ impl<R: Read, W: Write> Client<R, W> {
     /// waits. Waiting for writes already in flight may extend the call. If
     /// connecting fails, the client has no session and every sender it issued
     /// before is invalid.
+    ///
+    /// # Panics
+    ///
+    /// Panics if the handshake or write timeout is too large to add to an
+    /// [`Instant`], or if signing reads a wall time before the Unix epoch from
+    /// the stream's clock.
     pub fn connect<V: Verifier>(&mut self, verifier: &V) -> Result<(Sender<W>, V::Info), Error> {
         // Compute the deadline by which the handshake must finish
         let deadline = self.outbound.clock.now() + self.handshake_timeout;

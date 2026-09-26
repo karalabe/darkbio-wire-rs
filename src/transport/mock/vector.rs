@@ -108,14 +108,14 @@ pub enum Event {
     },
     /// A failed flush after a write.
     FlushFailed,
-    /// A write that exhausts its operation budget after accepting these bytes.
+    /// A write that reports `TimedOut` after accepting these bytes.
     ///
     /// Acceptance and its following error are recorded as one logical event.
     WriteTimedOut {
-        /// Bytes the adapter accepted before the budget ran out.
+        /// Bytes the adapter accepted before the timeout.
         bytes: Vec<u8>,
     },
-    /// A flush that exhausts the write operation's remaining budget.
+    /// A flush that reports `TimedOut`.
     FlushTimedOut,
 }
 

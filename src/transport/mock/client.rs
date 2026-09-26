@@ -180,10 +180,10 @@ pub enum Step {
         /// Whether all later writes fail too, until a [`Step::Heal`].
         then_broken: bool,
     },
-    /// Timeout of the next matching output operation after the selected
-    /// prefix.
+    /// Timeout that the next matching output operation reports after the
+    /// selected prefix.
     ///
-    /// It leaves no budget for a failure notification on that operation.
+    /// The transport skips the failure notification after this error.
     Timeout(CutPoint),
 }
 
@@ -506,9 +506,9 @@ pub struct Client {
     broken: bool,
     /// Cut armed for the next matching server write.
     cut: Option<CutPoint>,
-    /// Whether the armed cut expires the operation budget.
+    /// Whether the armed cut returns `TimedOut`.
     timeout: bool,
-    /// Whether the last modeled send exhausted that budget.
+    /// Whether the last modeled send reported `TimedOut`.
     timed_out: bool,
 
     /// State the server should be in.

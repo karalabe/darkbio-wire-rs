@@ -88,8 +88,13 @@ impl<W: Write> Sender<W> {
     /// Returns [`Error::Terminated`] if the outgoing transport was released.
     /// Returns [`Error::EncryptionFailed`] if the context was released or its
     /// session ended. Permanent stream closure is observed through I/O, so an
-    /// overlapping send may succeed. Unexpected encryption failures and poisoned
-    /// locks panic. Transport reuse after a panic is unsupported.
+    /// overlapping send may succeed.
+    ///
+    /// # Panics
+    ///
+    /// Panics on an unexpected encryption failure, a poisoned lock, or a write
+    /// timeout too large to add to an [`Instant`](std::time::Instant). Transport
+    /// reuse after a panic is unsupported.
     pub fn send(&self, message: &[u8]) -> Result<(), Error> {
         // Retain the transport and the session's context, refusing once either
         // is gone

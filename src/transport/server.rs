@@ -32,7 +32,10 @@ use tracing::{debug, info, trace, warn};
 /// [`trust::device`]. Construction checks that shape, and the client's
 /// [`Verifier`](crate::transport::Verifier) decides whether to trust it.
 #[derive(Clone)]
-pub struct Attestation(Vec<u8>);
+pub struct Attestation(
+    /// Encoded CWT whose claim shape was checked at construction.
+    Vec<u8>,
+);
 
 impl Attestation {
     /// Wraps a CWT after checking that it decodes as a device attestation.
@@ -282,6 +285,12 @@ impl<R: Read, W: Write, A: Attester> Server<R, W, A> {
     /// configured write timeout. A notification sent while handling a failed
     /// write shares that frame's remaining budget and is skipped after timeout.
     /// These output failures do not themselves close the byte stream.
+    ///
+    /// # Panics
+    ///
+    /// Panics if a handshake or write timeout is too large to add to an
+    /// [`Instant`], or if a handshake reads a wall time before the Unix epoch
+    /// from the stream's clock.
     pub fn recv(&mut self) -> Result<Event<W>, Error> {
         // Continue until a message, session transition or I/O error is ready.
         // Empty frames request a handshake on the next pass.

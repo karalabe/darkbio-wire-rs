@@ -166,7 +166,7 @@ impl<T> Promise<T> {
     /// return promptly and must not panic.
     ///
     /// Dropping the promise drops a callback still waiting for settlement, without
-    /// cancelling the operation. A callback already taken by settlement still runs.
+    /// canceling the operation. A callback already taken by settlement still runs.
     ///
     /// # Panics
     /// Panics if notification was already registered on this promise.

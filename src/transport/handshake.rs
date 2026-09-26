@@ -63,7 +63,7 @@ pub(crate) struct ArkHelloAuth {
     pub host_crypto: xhpke::PublicKey,
 }
 
-/// Session acknowledgement from the host, containing the encapsulated key for
+/// Session acknowledgment from the host, containing the encapsulated key for
 /// the host-to-ark context.
 #[derive(Cbor)]
 #[cbor(array)]
@@ -74,7 +74,7 @@ pub(crate) struct HostAck {
 
 /// Authenticated data for [`HostAck`].
 ///
-/// It binds the acknowledgement to the Ark's identity and ephemeral key so an
+/// It binds the acknowledgment to the Ark's identity and ephemeral key so an
 /// intermediary cannot substitute its own hello.
 #[derive(Cbor)]
 #[cbor(array)]

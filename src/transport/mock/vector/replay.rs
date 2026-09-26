@@ -684,7 +684,7 @@ fn test_vectors_replay() {
 /// Builds a replay peer, a framed HostAck and the client's sending context.
 ///
 /// The seed fixes the server's encryption key, while every call seals a fresh
-/// HostAck. The peer has not processed the acknowledgement yet.
+/// HostAck. The peer has not processed the acknowledgment yet.
 fn checker_session(seed: u8) -> (Peer, Vec<u8>, xhpke::Sender) {
     use crate::transport::mock::frame;
 

@@ -143,8 +143,9 @@ pub enum Error {
 
     /// Writing a frame failed, possibly while setting its deadline or flushing.
     ///
-    /// [`std::io::ErrorKind::TimedOut`] means its output budget expired. The
-    /// adapter may already have accepted part or all of the frame. The affected
+    /// [`std::io::ErrorKind::TimedOut`] reports an expired output budget or a
+    /// timeout the adapter returned. The adapter may already have accepted part
+    /// or all of the frame. The affected
     /// session or handshake cannot continue. This error does not close the byte
     /// stream.
     #[error("wire send failed: {0}")]
@@ -171,9 +172,9 @@ pub enum Error {
     ///
     /// The client returns it after the server's empty frame notification,
     /// without closing the stream, so the client can reconnect. The transport
-    /// server reports resets through [`Event::Disconnected`] instead. A protocol
-    /// session closes with it when its transport session drops, for any reason,
-    /// or when a newer session replaces it.
+    /// server reports a session's end through [`Event::Disconnected`] instead.
+    /// The [`protocol`](crate::protocol) server closes its session with this
+    /// error on that event, and when a replacement closes its predecessor.
     #[error("wire session reset by the peer")]
     SessionReset,
 

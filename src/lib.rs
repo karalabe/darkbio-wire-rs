@@ -36,7 +36,10 @@ use std::sync::atomic::{AtomicU64, Ordering};
 /// label is zero. The type derives no equality or hashing and exposes no
 /// number, so no code can route or match on it.
 #[derive(Clone, Copy, Debug, Default)]
-pub(crate) struct LogId(u64);
+pub(crate) struct LogId(
+    /// Number shown in log lines.
+    u64,
+);
 
 impl From<u64> for LogId {
     fn from(id: u64) -> Self {

@@ -118,6 +118,10 @@ pub struct Reader {
 }
 
 impl io::Read for Reader {
+    /// Reads the buffered bytes, waiting for more until the read deadline.
+    ///
+    /// Buffered bytes are delivered even past the deadline. An empty `buf`, a
+    /// closed reader or a closed peer with nothing buffered returns zero.
     fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
         // Recheck the buffer and closure state after every wake
         let mut state = self.pipe.lock();
@@ -160,6 +164,7 @@ impl Read for Reader {
 }
 
 impl Drop for Reader {
+    /// Closes this reading direction and discards its unread bytes.
     fn drop(&mut self) {
         self.pipe.close_reader();
     }
@@ -184,6 +189,12 @@ pub struct Writer {
 }
 
 impl io::Write for Writer {
+    /// Appends as many bytes as fit, waiting for space until the write
+    /// deadline.
+    ///
+    /// An expired deadline fails before accepting any bytes, even with space
+    /// free. An empty `buf` then returns zero, and a closed end fails with
+    /// [`io::ErrorKind::BrokenPipe`].
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         // Recheck capacity and the same deadline after every wake
         let mut state = self.pipe.lock();
@@ -211,6 +222,11 @@ impl io::Write for Writer {
         }
     }
 
+    /// Checks the write deadline and that no output was lost, without waiting
+    /// for the peer to read.
+    ///
+    /// It fails with [`io::ErrorKind::BrokenPipe`] after local closure, or when
+    /// the reader closed with output unread.
     fn flush(&mut self) -> io::Result<()> {
         // Check the installed deadline while observing a consistent pipe state
         let state = self.pipe.lock();
@@ -236,6 +252,8 @@ impl Write for Writer {
 }
 
 impl Drop for Writer {
+    /// Closes this writing direction, so the reader gets EOF once the buffer
+    /// drains.
     fn drop(&mut self) {
         self.pipe.close_writer();
     }

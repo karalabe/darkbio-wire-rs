@@ -1001,8 +1001,8 @@ fn test_expired_reply_releases_incoming_id() {
     }
 }
 
-/// A queued request or reply that expires releases its ID without reaching the
-/// peer.
+/// An expiring queued request drops before taking a wire ID, and an expiring
+/// queued reply frees its peer request ID, neither reaching the peer.
 #[test]
 fn test_queued_expiry_releases_ids() {
     use Step::*;
